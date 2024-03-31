@@ -15,8 +15,8 @@ const Chat = () => {
   ];
 
   return (
-    <div className="flex ml-16  sm:ml-52 lg:ml-72 mt-10" style={{ height: "500px" }}>
-      <div className="w-1/3 p-4 bg-white shadow-2xl">
+    <div className="flex ml-16  sm:ml-52 lg:ml-72 mt-10 " style={{ height: "650px" }}>
+      <div className="w-1/3 p-4 bg-white shadow-2xl rounded-3xl">
         <div className="flex items-center">
           <img
             src="https://static01.nyt.com/images/2019/11/08/world/08quebec/08quebec-superJumbo.jpg"
@@ -24,7 +24,7 @@ const Chat = () => {
             alt="Profile Image"
             
           />
-          <p className="mr-3 lg:ml-3 text-xxs sm:text-base md:text-lg lg:text-xl ">Adeel Memon</p>
+          <p className="mr-3 lg:ml-3 text-xxs sm:text-xs xs:text-xxs lg:text-base xl:text-lg  ">Adeel Memon</p>
         </div>
         <div className="mt-4 relative  items-center flex">
           <div className="absolute left-1 sm:left-2 lg:left-3 text-gray-400">
@@ -41,7 +41,7 @@ const Chat = () => {
   {/* Chat List */}
   <div className="overflow-y-auto max-h-96 ">
     {chatMessages.map((message, index) => (
-      <div key={index} className="flex items-center mt-4">
+      <div key={index} className="flex items-center mt-4 ">
         <img
           src={message.image}
           className="object-cover h-5 lg:h-10 w-5 lg:w-10 rounded-full mr-4"
@@ -49,15 +49,15 @@ const Chat = () => {
         />
         <div className="flex flex-col">
           <div>
-            <p className="font-semibold text-left text-xxs sm:text-base md:text-lg lg:text-xl">
+            <p className="font-semibold text-left sm:text-xs xs:text-xxs lg:text-base xl:text-lg ">
               {message.name}
             </p>
           </div>
           <div className="flex md:flex-row md:items-center md:justify-between  space-x-1 md:space-x-4">
-  <p className="text-gray-500 text-xxs sm:text-xs md:text-lg lg:text-xl whitespace-nowrap overflow-ellipsis">
+  <p className="text-gray-500 text-xxs sm:text-xs xs:text-xxs lg:text-base xl:text-lg  whitespace-nowrap overflow-ellipsis">
     {message.message}
   </p>
-  <p className="text-gray-500 text-xxs sm:text-xs md:text-lg lg:text-xl xl:text-right">
+  <p className="text-gray-500 text-xxs sm:text-xs xs:text-xxs lg:text-base xl:text-lg  xl:text-right">
     {message.timestamp}
   </p>
 </div>
@@ -69,14 +69,14 @@ const Chat = () => {
 
       </div>
 
-      <div className="w-2/3 p-4 bg-white ml-4 mr-10 shadow-2xl flex justify-center items-center">
+      <div className="w-2/3 p-4 bg-white ml-4 mr-10 shadow-2xl rounded-3xl flex justify-center items-center">
         <div className="flex flex-col items-center">
           <img
             src={logo}
             alt="Centered Image"
-            style={{ maxWidth: "20%", maxHeight: "20%" }}
+            style={{ maxWidth: "15%", maxHeight: "15%" }}
           />
-          <button className="text-white bg-red-700 hover:bg-red-800 rounded-full py-0.5 lg:py-2 px-3 lg:px-10 border-2 text-xs sm:text-base md:text-lg lg:text-xl" >
+          <button className="text-white bg-red-700 hover:bg-red-800 rounded-full py-0.5 lg:py-2 px-3 lg:px-8 border-2 text-xs sm:text-xs xs:text-xxs lg:text-base xl:text-md " >
             Chat Now
           </button>
         </div>

@@ -1,104 +1,196 @@
-import React from 'react';
-import key from "../images/key.png";
-import house from "../images/house.png";
-import shovel from "../images/shovel.png";
-import modern from "../images/modern.png";
-import emaar from "../images/emaar.png";
-import { MoveRight,Building,MapPin} from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { Key, Shovel, Warehouse } from "lucide-react";
+import house from '../images/house.png';
+import pin from '../images/pin.png';
+import correct from '../images/correct.png';
+import threshold from '../images/threshold.png';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+import { endpoints, getEndpointURL } from './Apiendpoint';
+import { savePropertyData,setDashboardData } from '../components/Redux/Action';
+import { getRandomProfilePictureUrl } from './ImageFolder/Resuableimage';
+
 
 const Realestate = () => {
 
-  const faceData = [
-    {
-      id: 1,
-      title: 'Square One Appartments',
-      image:modern,
-      location:"Gulshan-e-iqbal block 8 noman",
-      appartments: 'Appartments',
-      block:"Block 10, Shop 04 & 05 Square One Mall, Plot 118 G National Stadium Rd, Gulistan-e-Iqbal, Karachi,Karachi City, Sindh 74700.",
-      description: "Discover the ultimate shopping experience at our premier outlet located in the heart of the mall. Step into a world of style and luxury as you browse through our curated",
-    },
-    {
-      id: 2,
-      title: 'Emmar Appartments',
-      image: emaar,
-      location:"Gulshan-e-hadeed block 9 opposite",
-      appartments:'Appartments',
-      block:"First Floor Plot # 118-G, Zellbury, Main National Stadium Rd, near Askari-IV, Gulshan-e-Iqbal, Karachi Sindh 75300, Pakistan",
-      description: "Discover the ultimate shopping experience at our premier outlet located in the heart of the mall. Step into a world of style and luxury as you browse through our curated",
-    },
-    // Add more data as needed
-  ];
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const investments = useSelector(state => state.investmentReducer.investments.investment);
+  const developmentInvestment = useSelector(state => state.investmentReducer.investments.developmentInvestment);
+  const holdingInvestment = useSelector(state => state.investmentReducer.investments.holdingInvestment);
+
+  const rentalPropertyIds = investments.map(investment => investment.rentalproperty_id);
+  const developmentPropertyIds = developmentInvestment.map(investment => investment.developmentproperty_id);
+  const holdingPropertyIds = holdingInvestment.map(investment => investment.holdingproperty_id);
+
+
+  const [propertyData, setPropertyData] = useState([]);
+  const [Developmentdata, setDevelopmentPropertyData] = useState([]);
+  const [Holdingdata, setHoldingPropertyData] = useState([]);
+
+  useEffect(() => {
+    const fetchAllpropertyData = async () => {
+      try {
+        const apiEndpoint = getEndpointURL(endpoints.getallinvestedproperty);
+        const url = `${apiEndpoint}?rentalPropertyIds=${rentalPropertyIds.join(',')}&developmentPropertyIds=${developmentPropertyIds.join(',')}&holdingPropertyIds=${holdingPropertyIds.join(',')}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setPropertyData(data.rentalPropertyData);
+        setDevelopmentPropertyData(data.developmentPropertyData)
+        setHoldingPropertyData(data.holdingPropertyData)
+
+        dispatch(setDashboardData(data.rentalPropertyData,data.developmentPropertyData,data.holdingPropertyData));
+      } catch (error) {
+        // Handle error
+      }
+    };
+    fetchAllpropertyData();
+
+  }, [setPropertyData, setDevelopmentPropertyData, setHoldingPropertyData,dispatch]);
+
+
+
+  // dispatch(savePropertyData(data));
+  const handleNewButtonClick = (propertyType,index) => {
+
+    const card = filterCardsByCategory()[index];
+    dispatch(savePropertyData({ ...card, type:propertyType}));
+    if (propertyType === 'Rental') {
+      navigate('/investedproperty');
+    } else if (propertyType === 'Development') {
+      navigate('/investedproperty');
+    }
+    else if (propertyType === 'Holdings') {
+      navigate('/investedproperty');
+    }
+  };
+
+
+  const [activeCategory, setActiveCategory] = useState('Rental');
+
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+  };
+
+  const filterCardsByCategory = () => {
+    switch (activeCategory) {
+      case 'Rental':
+        return propertyData;
+      case 'Development':
+        return Developmentdata;
+      case 'Holdings':
+        return Holdingdata;
+      default:
+        return propertyData; // Default to rental cards if category not found
+    }
+  };
+
+
+  const iconStyle = {
+    width: "1rem",
+    height: "1rem",
+
+  };
+
+
+
   return (
-    <>
-    <div className="flex  md:flex-row items-center ml-60 p-14 space-x-4 relative" >
-      <div className="mr-4 mb-4 md:mb-0 md:mr-0">
-        <p className="text-2xl">Invested Properties</p>
+    <div className="ml-16 xs:ml-32 sm:ml-36 md:ml-36 lg:ml-56 xl:ml-72 p-2 space-x-3.5 flex-col">
+
+      <div className="flex items-center justify-between mt-4 p-4">
+        <div className="flex items-center">
+          <h2 className="sm:text-sm xs:text-xxs lg:text-lg xl:text-lg whitespace-nowrap">Invested Properties</h2>
+        </div>
+        <div className="w-1/2 flex space-x-6  mr-40 xs:mr-20 sm:mr-28 md:mr-36 lg:mr-56 xl:ml-72">
+          <button
+            className={`flex items-center justify-center border-2 px-2 py-2 rounded-3xl ${activeCategory === 'Rental' ? 'bg-red-800  border-red-800 text-white' : ''
+              }`}
+            onClick={() => handleCategoryClick('Rental')}
+          >
+            <Key style={iconStyle} className="mr-2" />
+            <p className="sm:text-xs xs:text-xxs lg:text-md xl:text-md">
+              Rental
+            </p>
+          </button>
+          <button
+            className={`flex items-center justify-center border-2 px-2 py-2 rounded-3xl ${activeCategory === 'Development' ? 'bg-red-800 border-red-800  text-white' : ''
+              }`}
+            onClick={() => handleCategoryClick('Development')}
+          >
+            <Shovel style={iconStyle} className="mr-2" />
+            <p className="sm:text-xs xs:text-xxs lg:text-md xl:text-md">
+              Development
+            </p>
+          </button>
+          <button
+            className={`flex items-center justify-center border-2 px-2 py-2 rounded-3xl ${activeCategory === 'Holdings' ? 'bg-red-800 border-red-800  text-white' : ''
+              }`}
+            onClick={() => handleCategoryClick('Holdings')}
+          >
+            <Warehouse style={iconStyle} className="mr-2" />
+            <p className="sm:text-xs xs:text-xxs lg:text-md xl:text-md">
+              Holdings
+            </p>
+          </button>
+        </div>
+
       </div>
-     
-        <div className="flex space-x-10">
-          <button className="flex bg-red-600 text-white rounded-full py-2 px-4 hover:bg-red-700">
-          <img
-              src={key}
-              alt="key"
-              className="mr-1 w-5 h-5 "
-            />
-            Rental
-          </button>
-          <button className="flex text-black rounded-full py-2 px-4 border-gray-600 border-2 border-gray-400">
-          <img
-              src={shovel}
-              alt="shovel"
-              className="mr-1 w-6 h-6"
-            />
-            Development
-          </button>
-          <button className="flex text-black rounded-full py-2 px-4 border-2 border-gray-400">
-          <img
-              src={house}
-              alt="house"
-              className="mr-1 w-6 h-6"
-            />
-            Holdings
-          </button>
-        </div>
-      </div>
-  
-      <div class="card ml-16 lg:ml-72 shadow-xl flex space-x-4  w-2/3">
-  {faceData.map((person) => (
-    <div key={person.id} className=" shadow-xl ">
-    
-      <img
-        src={person.image}
-        className="w-screen"
-      />
-   
-   <div className=" space-y-2 ">
-        <h5 className="text-xxs text-black-600 sm:text-xs xs:text-xxs md:text-xs lg:text-lg">{person.title}</h5>
-        <div className="flex items-center space-x-2 ">
-          <h2 className="text-xxs text-black-600 sm:text-xs xs:text-xxs md:text-xs lg:text-lg flex items-center"><Building className="text-blue-950" /> {person.appartments}</h2>
-        </div>
-        <div className="flex items-center space-x-2">
-          <h2 className="text-xxs text-black-600 sm:text-xs xs:text-xxs md:text-xs lg:text-lg flex items-center"><MapPin className="text-blue-950" />{person.location}</h2>
-        </div>
-        <p className="text-xxs sm:text-xs xs:text-xxs md:text-xs lg:text-lg">{person.description}</p>
-        
-        <div class="flex items-center justify-center">
-        <a href="#" class="btn btn-primary">
-          <div class="flex items-center space-x-2">
-            <span class="text-xxs sm:text-xs xs:text-xxs md:text-xs lg:text-lg text-blue-500">See Property details</span>
-            <MoveRight className="text-blue-500"/>
+
+      <div className="flex flex-wrap cursor-pointer" >
+        {filterCardsByCategory().map((card, index) => (
+          <div key={index} className="w-1/3 p-4" onClick={() => handleNewButtonClick(activeCategory,index)}>
+            <div className="relative">
+              <img src={getRandomProfilePictureUrl(card.landpictures, ['rentalproperty\\', 'developmentproperty\\', 'holdingproperty\\'])} alt="Icon" className="w-full h-48 object-cover  rounded-tl-xl rounded-tr-xl rounded-bl-none rounded-br-none" />
+              <div className="absolute top-2 left-2 flex items-center">
+                <img src={correct} alt="Icon" className=" w-4 h-4 sm:w-4 sm:h-4 md:w-4 md:h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6" />
+              </div>
+              <div className="absolute bg-white top-2 right-2 flex flex-wrap rounded space-x-2 text-sm px-2 py-1">
+
+                <img src={threshold} alt="Icon" className="w-2.5 h-2.5 sm:w-2 sm:h- md:w-4 md:h-4 lg:w-5 lg:h-5 xl:w-4 xl:h-4" />
+                <p className="sm:text-xxs xs:text-xxs md:text-xs lg:text-md xl:text-md">
+                  {card.rentalsqft} sq/ft
+                </p>
+              </div>
+
+
+
+              <div className="absolute  bottom-0 left-5 bg-white px-1 py-1">
+                <img src={getRandomProfilePictureUrl(card.propertylogo, ['rentalproperty\\', 'developmentproperty\\', 'holdingproperty\\'])} alt="Icon" className="h-8 w-8" />
+              </div>
+
+
+            </div>
+            <div className="bg-white rounded-lg shadow-lg p-6">
+
+              <h2 className="mb-2 sm:text-xs xs:text-xxs lg:text-base xl:text-[17px]">{card.propertyname}</h2>
+
+              {/* Second Title with Icon */}
+              <div className="flex  mb-2">
+                <img src={house} alt="Second Title Icon" className="w-6 h-6 mr-2" />
+                <h3 className="sm:text-xs xs:text-xxs lg:text-base xl:text-[15px]">{card.typeofproperty}</h3>
+              </div>
+
+              {/* Location with Icon */}
+              <div className="flex  mb-2">
+                <img src={pin} alt="Location Icon" className="w-6 h-6 mr-2" />
+                <p className="sm:text-xs xs:text-xxs lg:text-[13px] xl:text-[15px]">{card.location}</p>
+              </div>
+              <div className="flex text-gray-400 text-sm mt-4" style={{ height: '90px' }}>
+                <p className="sm:text-xs xs:text-xxs lg:text-[11px] xl:text-md overflow-hidden break-all" >{card.description}</p>
+              </div>
+            </div>
           </div>
-        </a>
+
+        ))}
+
       </div>
-    </div> 
-  </div> 
-  ))}
-</div>
-
-  </>
+    </div>
   );
-
 };
 
 export default Realestate;

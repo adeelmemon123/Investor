@@ -233,9 +233,9 @@ export default function Register() {
                                 </button>
                             )}
                             <div className="flex text-sm">
-                                <a href="#" className="font-semibold text-red-600 hover:text-red-500">
+                                <p  className="font-semibold text-red-600 hover:text-red-500">
                                     Sign In
-                                </a>
+                                </p>
                                 <MoveRight name="arrow-right" size={20} className="text-red-600 ml-1" />
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { Check, Home, CreditCard, MonitorCheck,LayoutDashboard,LogOutIcon } from "lucide-react";
 import logo from "../images/logo.png";
 import { Link ,useNavigate} from "react-router-dom";
@@ -9,12 +9,49 @@ function Sidebar() {
 
   const navigate = useNavigate(); // Initialize navigate
 
-  const handleLogout = () => {
-    // Clear local storage
-    localStorage.clear();
+ // const handleLogout = () => {
+  //   // Clear local storage
+  //   localStorage.clear();
     
-    // Navigate to the index page (App.js)
-    navigate("/signin"); // You need to specify the correct path to your index page
+  //   // Navigate to the index page (App.js)
+  //   navigate("/signin"); // You need to specify the correct path to your index page
+  // };
+
+  const handleLogout = async () => {
+    const Data = localStorage.getItem('data');
+    const parsedData = JSON.parse(Data);
+  
+    if (!parsedData || !parsedData.member || !parsedData.member.token) {
+      console.error('No valid token available');
+      navigate('/signin')
+      return;
+    }
+  
+    console.log(parsedData.member.token);
+    const token = parsedData.member.token;
+  
+    try {
+      const response = await fetch('https://onecapitalinvestment.com/logoutmember', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+  
+      const responseData = await response.json();
+  
+      if (response.ok) {
+        localStorage.clear();
+        localStorage.removeItem('data');
+        console.log('Logout successful');
+        navigate('/signin')
+      } else {
+        console.error(responseData.error, responseData.message);
+      }
+    } catch (error) {
+      console.error('Network error:', error.message);
+    }
   };
 
   const handleItemClick = (itemLabel) => {
@@ -34,7 +71,7 @@ function Sidebar() {
         <Home />
       </span>
     ),},
-    { path: "/realestate", label: "In The Works", 
+    { path: "/inworks", label: "In The Works", 
      iconComponent: (
       <span className="flex-shrink-0 w-6 h-5 mr-4">
         <Check />
@@ -51,7 +88,7 @@ function Sidebar() {
         <MonitorCheck />
       </span>
     ), },
-    { path: "/logout", label: "Logout", iconComponent: (
+    { path: "/signin", label: "Logout", iconComponent: (
       <span className="flex-shrink-0 w-6 h-5 mr-4" onClick={handleLogout}>
         <LogOutIcon />
       </span>
@@ -71,10 +108,10 @@ function Sidebar() {
       <div className="px-2 pt-16 ">
       <ul >
           {sidebarItems.map((item) => (
-            <li key={item.path} className="hover:bg-gray-200 rounded-lg">
+            <li key={item.path} className="hover:bg-gray-100 rounded-lg">
               <Link
                 className={`text-sm items-center rounded-lg px-2 py-2.5 flex ${
-                  selectedItemLabel === item.label ? "text-black" : "text-gray-400"
+                  selectedItemLabel === item.label ? "text-red-800" : "text-gray-400"
                 }`} 
                 to={item.path}
                 onClick={() => handleItemClick(item.label)}
@@ -88,7 +125,7 @@ function Sidebar() {
         </ul>
 
            
-             <footer class="fixed bottom-0 left-0 z-20  sm:w-40  lg:w-48 xl:w-56 2xl:w-60 p-4 bg-white border-t border-gray-400  items-center ">
+             <footer className="fixed bottom-0 left-0 z-20  sm:w-40  lg:w-48 xl:w-56 2xl:w-60 p-4 bg-white border-t border-gray-400  items-center ">
        
         <div className="text-black-500 xl:flex  items-center lg:flex">
         <span className="hidden sm:block sm:text-xs xs:text-xxs md:text-xs ">A Product of</span>
