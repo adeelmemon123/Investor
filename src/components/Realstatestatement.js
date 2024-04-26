@@ -88,7 +88,7 @@ const Realstatestatement = () => {
     <div className="rounded-full mr-14">
       <img
         src={formatProfilePictureUrl(investmentDetails.propertylogo,['rentalproperty\\', 'developmentproperty\\', 'holdingproperty\\'])}
-        alt="Profile"
+        alt="profile"
         className="w-20 h-20 object-cover rounded-full ml-14"
       />
     </div>
@@ -139,8 +139,8 @@ const Realstatestatement = () => {
 
     </div>
   <div className="mt-10">
-    <div className="p-2 text-left ml-20 md:ml-[195px]  lg:ml-[255px] xl:ml-[280px] text-xl font-semibold mb-4">Document</div>
- <div className="w-3/4  mt-4 ml-20 md:ml-[200px]  lg:ml-[255px] xl:ml-[280px] rounded-2xl flex-col border-2 border-[#D7DBEC]">
+    <div className="p-2 text-left ml-20 sm:ml-[175px] md:ml-[195px]  lg:ml-[255px] xl:ml-[280px] text-xl font-semibold mb-4">Document</div>
+ <div className="w-3/4  mt-4 ml-20 sm:ml-[175px] md:ml-[200px]  lg:ml-[255px] xl:ml-[280px] rounded-2xl flex-col border-2 border-[#D7DBEC]">
   <form className="bg-white p-4 flex justify-between items-center rounded-2xl">
     <div className="flex items-center">
       <p className="text-sm md:text-sm sm:text-xs xs:text-xxs lg:text-md xl:text-md text-blue-700">
@@ -148,8 +148,8 @@ const Realstatestatement = () => {
       </p>
     </div>
     <div className="flex items-center space-x-4" style={{ width: '200px', height: '100px' }}>
-  <img src={gettransaction(mystatement.supportingdocument,'addinvestment\\','developmentinvestment\\','holdinginvestment\\')} alt="Image 1" className="object-cover w-20 h-20 sm:w-20 rounded-lg" />
-  <img src={gettransaction(mystatement.supportingdocument,'addinvestment\\','developmentinvestment\\','holdinginvestment\\')} alt="Image 1" className="object-cover w-20  h-20 sm:w-20 rounded-lg" />
+  <img src={gettransaction(mystatement.supportingdocument,'addinvestment\\','developmentinvestment\\','holdinginvestment\\')} alt="new" className="object-cover w-20 h-20 sm:w-20 rounded-lg" />
+  <img src={gettransaction(mystatement.supportingdocument,'addinvestment\\','developmentinvestment\\','holdinginvestment\\')} alt="development" className="object-cover w-20  h-20 sm:w-20 rounded-lg" />
 </div>
 
     <button

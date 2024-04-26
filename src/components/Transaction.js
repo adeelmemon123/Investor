@@ -18,8 +18,17 @@ const Transaction = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const mystatement = useSelector(state => state.Statementreducer.mystatement);
+  // const mystatement = useSelector(state => state.Statementreducer.mystatement);
   const memberData = useSelector(state => state.reducer.memberData.investor);
+  const mystatementData = useSelector(state => state.Statementreducer.mystatement);
+
+let mystatement;
+
+if (mystatementData !== null && typeof mystatementData === 'object') {
+  mystatement = mystatementData;
+} else {
+  mystatement = "0"; // Set your default value here
+}
 
 
   const handleButtonClick = (clickedTransaction) => {
@@ -36,6 +45,7 @@ const Transaction = () => {
 
   async function getInvestorTransactions(investorId) {
     try {
+      
       const apitransaction = getEndpointURL(`${endpoints.getallinvestortransactions}`);
       const response = await fetch(`${apitransaction}?investor_id=${investorId}`);
       if (!response.ok) {
@@ -50,8 +60,9 @@ const Transaction = () => {
   }
   
   useEffect(() => {
+
     async function fetchData() {
-      const transactions = await getInvestorTransactions(mystatement.investor_id);
+      const transactions = await getInvestorTransactions(memberData.id);
       if (transactions !== null) {
         setAllTransactions(transactions)
     }
@@ -277,7 +288,7 @@ const Transaction = () => {
     </div>
     <div className="space-y-6">
     {Alltransactions.length === 0 ? (
-  <div className='w-full flex items-center justify-center'><p>No transactions available</p>    </div>
+  <div className='w-full flex items-center justify-center text-gray-400'><p>No transactions available</p>    </div>
 ) : (
   Alltransactions.map((transaction) => (
     <TransactionItem  transaction={transaction} />

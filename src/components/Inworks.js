@@ -113,8 +113,8 @@ const Inworks = () => {
       </div>
 
       <div className="flex cursor-pointer flex-wrap">
-        {filterCardsByCategory() ? (
-          filterCardsByCategory().map((card, index) => (
+      {filterCardsByCategory() && filterCardsByCategory().length > 0 ? (
+    filterCardsByCategory().map((card, index) => (
             <div key={index} className="w-1/3 p-4" onClick={() => handleNewButtonClick(activeCategory, index)}>
               <div className="relative">
                 <img src={getRandomProfilePictureUrl(card.landpictures, ['workrentalproperty\\', 'workdevelopmentproperty\\', 'workholdingproperty\\'])} alt="Icon" className="w-full h-48 object-cover  rounded-tl-xl rounded-tr-xl rounded-bl-none rounded-br-none" />
@@ -150,7 +150,11 @@ const Inworks = () => {
               </div>
             </div>
           ))
-        ) : null}
+        ) : (
+          <div className="w-full text-center p-4">
+            <p className="text-gray-400">There are no In works properties available.</p>
+          </div>
+        )}
       </div>
 
     </div>

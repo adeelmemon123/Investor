@@ -1,4 +1,4 @@
-import React, { useState,useEffect} from "react";
+import React, { useState} from "react";
 import main from "../images/main.jpg";
 import logo from "../images/logo.png";
 import { Bell, MessageCircle } from "lucide-react";
@@ -12,7 +12,17 @@ import {ProfilePictureUrls} from './ImageFolder/Resuableimage';
 
 function Header() {
   const navigate = useNavigate();
-  const memberData = useSelector(state => state.reducer.memberData.investor);
+  const memberData = useSelector(state => state.reducer.memberData);
+
+  let investor;
+  
+  if (memberData !== null && typeof memberData === 'object') {
+    investor = memberData.investor;
+  } else {
+
+    investor = "123"; // Set your default value here
+  }
+  
 
 
 
@@ -200,7 +210,7 @@ if (!memberData) {
                   <div className="flex flex-col items-center">
                     <Link to="/profile">
                       <img
-                        src={ProfilePictureUrls(memberData.profilepicture,'addinvestor\\')}
+                        src={ProfilePictureUrls(investor.profilepicture,'addinvestor\\')}
                         className="object-cover h-7 sm:h-9 w-7 sm:w-9 rounded-full mr-2 bg-gray-300 border-2 sm:border-4 border-white shadow-xl mt-2"
                         alt=""
                       />

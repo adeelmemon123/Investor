@@ -137,7 +137,7 @@ const HoldingProperty = HoldingPropertyCategories(holdingPropertyData);
     ],
     
     datasets: [{
-      data: [rentalPropertyCount, 0,developmentPropertyCount, 0, holdingPropertyCount],
+      data: [ holdingPropertyCount, 0,developmentPropertyCount, 0,rentalPropertyCount],
       backgroundColor: [
         'rgb(245, 141, 104)',
         'transparent',
@@ -173,6 +173,7 @@ const HoldingProperty = HoldingPropertyCategories(holdingPropertyData);
           },
           generateLabels: function(chart) {
             const data = chart.data;
+             
             const windowWidth = window.outerWidth;
             const textSize = calculateTextSize(windowWidth); // Calculate text size based on window width
   
@@ -286,15 +287,19 @@ const HoldingProperty = HoldingPropertyCategories(holdingPropertyData);
    
   <>
       <div className="flex ml-16 xs:ml-32 sm:ml-40 md:ml-40 lg:ml-56 xl:ml-72  p-2 space-x-3.5   ">
-        <div className="w-1/2 shadow-xl rounded-xl">
-          <Card> 
-          <Card.Title className="text-[9px] xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-2xl font-semibold text-left p-2 ml-4">My Portfolio</Card.Title>
-           <div  className="h-[430px] flex items-center justify-center">
-              <Pie data={Portfolio} options={options} />
-              </div>
-    
-          </Card>
-        </div>
+      <div className="w-1/2 shadow-xl rounded-xl">
+  <Card>
+    <Card.Title className="text-[9px] xs:text-xs sm:text-sm md:text-md lg:text-lg xl:text-2xl font-semibold text-left p-2 ml-4">My Portfolio</Card.Title>
+    <div className="h-[430px] flex items-center justify-center">
+      {Portfolio.datasets[0].data.every(val => val === 0) ? (
+        <p className="text-[10px] text-gray-400">No data available</p>
+      ) : (
+        <Pie data={Portfolio} options={options} />
+      )}
+    </div>
+  </Card>
+</div>
+
         <div className="flex flex-col w-1/2">
         <Card.Title className="text-2xl text-left p-2">Latest Updates,</Card.Title>
         <div className="overflow-y-scroll h-[430px] p-4 scrollbar-thin scrollbar-thumb-red-700 scrollbar-track-gray-100">
@@ -336,17 +341,22 @@ const HoldingProperty = HoldingPropertyCategories(holdingPropertyData);
   <div className="p-2 text-left ml-72 text-2xl font-semibold">Investment Overview</div>
   <div className="flex flex-col items-center md:flex-row md:justify-center md:flex-wrap ml-20 xs:ml-52 sm:ml-40 md:ml-32 lg:ml-60 xl:ml-64 p-2 space-y-4 md:space-y-0 md:space-x-4">
   {investmentoverwiew.map((project, index) => (
-    <div key={index} className="rounded-2xl shadow-xl h-[300px] w-full md:w-auto">
-      <div>
-        <p className="ml-8 mt-6 mb-[-30px] text-sm md:text-lg">
-          {project.title}
-        </p>
-      </div>
-      <div className="h-[300px] w-full ml-2">
-        <Investmentoverview labels={project.labels} data={project.data} />
-      </div>
+  <div key={index} className="rounded-2xl shadow-xl w-full md:w-1/2 lg:w-1/3 xl:w-1/4 mx-2 my-4">
+    <div>
+      <p className="ml-8 mt-6 mb-[-30px] text-sm md:text-lg">
+        {project.title}
+      </p>
     </div>
-  ))}
+    <div className="h-[300px] flex justify-center items-center">
+      {project.data[0] === 0 ? (
+        <p className="text-[10px] text-gray-400">No data {project.title}</p>
+      ) : (
+        <Investmentoverview labels={project.labels} data={project.data} />
+      )}
+    </div>
+  </div>
+))}
+
 </div>
 
   

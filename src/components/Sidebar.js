@@ -4,55 +4,32 @@ import logo from "../images/logo.png";
 import { Link ,useNavigate} from "react-router-dom";
 
 
+
 function Sidebar() {
   const [selectedItemLabel, setSelectedItemLabel] = useState(null);
 
-  const navigate = useNavigate(); // Initialize navigate
-
- // const handleLogout = () => {
-  //   // Clear local storage
-  //   localStorage.clear();
-    
-  //   // Navigate to the index page (App.js)
-  //   navigate("/signin"); // You need to specify the correct path to your index page
-  // };
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     const Data = localStorage.getItem('data');
-    const parsedData = JSON.parse(Data);
-  
-    if (!parsedData || !parsedData.member || !parsedData.member.token) {
-      console.error('No valid token available');
-      navigate('/signin')
-      return;
-    }
-  
-    console.log(parsedData.member.token);
-    const token = parsedData.member.token;
-  
+
     try {
-      const response = await fetch('https://onecapitalinvestment.com/logoutmember', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-  
-      const responseData = await response.json();
-  
-      if (response.ok) {
-        localStorage.clear();
-        localStorage.removeItem('data');
-        console.log('Logout successful');
-        navigate('/signin')
-      } else {
-        console.error(responseData.error, responseData.message);
-      }
-    } catch (error) {
-      console.error('Network error:', error.message);
+
+        const parsedData = JSON.parse(Data);
+
+        if (!parsedData || !parsedData.member || !parsedData.member.token) {
+          localStorage.clear();
+          sessionStorage.clear();
+          localStorage.removeItem('data');
+            navigate('/signin');
+            window.location.reload();
+            return;
+        }
+
+       } catch (error) {
+        console.error('Error during logout:', error);
     }
-  };
+};
 
   const handleItemClick = (itemLabel) => {
     setSelectedItemLabel(itemLabel);
@@ -88,11 +65,20 @@ function Sidebar() {
         <MonitorCheck />
       </span>
     ), },
-    { path: "/signin", label: "Logout", iconComponent: (
-      <span className="flex-shrink-0 w-6 h-5 mr-4" onClick={handleLogout}>
-        <LogOutIcon />
-      </span>
-    ), },
+    // { path: "/signin", label: "Logout", iconComponent: (
+    //   <span className="flex-shrink-0 w-6 h-5 mr-4" onClick={handleLogout}>
+    //     <LogOutIcon />
+    //   </span>
+    // ), },
+    { 
+      label: "Logout",
+      onClick: handleLogout,
+      iconComponent: (
+          <button className="flex-shrink-0 w-6 h-5 mr-4" onClick={handleLogout}>
+              <LogOutIcon />
+          </button>
+      ) 
+  },
    
   ];
 
@@ -107,21 +93,35 @@ function Sidebar() {
    
       <div className="px-2 pt-16 ">
       <ul >
-          {sidebarItems.map((item) => (
-            <li key={item.path} className="hover:bg-gray-100 rounded-lg">
-              <Link
-                className={`text-sm items-center rounded-lg px-2 py-2.5 flex ${
-                  selectedItemLabel === item.label ? "text-red-800" : "text-gray-400"
-                }`} 
-                to={item.path}
-                onClick={() => handleItemClick(item.label)}
-                style={{ marginBottom: "10px" }}
-              >
-                {item.iconComponent}
-                <span className="hidden sm:block">{item.label}</span>
-              </Link>
-            </li>
-          ))}
+      {sidebarItems.map((item) => (
+  <li key={item.path} className="hover:bg-gray-100 rounded-lg">
+    {item.path ? (
+      <Link
+        className={`text-sm items-center rounded-lg px-2 py-2.5 flex ${
+          selectedItemLabel === item.label ? "text-red-800" : "text-gray-400"
+        }`}
+        to={item.path}
+        onClick={() => handleItemClick(item.label)}
+        style={{ marginBottom: "10px" }}
+      >
+        {item.iconComponent}
+        <span className="hidden sm:block">{item.label}</span>
+      </Link>
+    ) : (
+      <button
+        className={`text-sm items-center rounded-lg px-2 py-2.5 flex ${
+          selectedItemLabel === item.label ? "text-red-800" : "text-gray-400"
+        }`}
+        onClick={item.onClick}
+        style={{ marginBottom: "10px" }}
+      >
+        {item.iconComponent}
+        <span className="hidden sm:block">{item.label}</span>
+      </button>
+    )}
+  </li>
+))}
+
         </ul>
 
            

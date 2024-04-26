@@ -103,6 +103,7 @@ export default function Signin({ hideHeader, showHeader }) {
         return response.json();
       })
       .then(data => {
+        console.log(data)
         dispatch(setInvestments(data));
         return data;
       });
