@@ -71,7 +71,7 @@ const Investedproperty = () => {
           </div>
 
           {/* Center part with the rental button */}
-          <div className="flex-grow flex justify-center">
+          <div className="flex-grow flex justify-center mr-40">
             <button className="bg-gray-300 px-6 py-2 rounded-full flex items-center">
               <Key style={iconStyle2} className="mr-2" />
               <p  className="text-[13px] sm:text-xs xs:text-xxs lg:text-base xl:text-[15px]">{propertyData.type}</p>
@@ -81,7 +81,7 @@ const Investedproperty = () => {
 
           {/* Right corner with the edit property button */}
          
-          <div >
+          {/* <div >
             <button
               className="bg-red-800 border-red-800 text-white px-6 py-2 rounded-lg border-2 sm:text-xs xs:text-xxs lg:text-md xl:text-md"
               style={{ transition: 'background 0.3s, color 0.3s, border-color 0.3s',height: '50px',  }}
@@ -99,7 +99,7 @@ const Investedproperty = () => {
             >
             My Statement
             </button>
-          </div>
+          </div> */}
         </div>
         <div className="w-11/12">
 

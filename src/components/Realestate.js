@@ -29,29 +29,39 @@ const Realestate = () => {
   const [Developmentdata, setDevelopmentPropertyData] = useState([]);
   const [Holdingdata, setHoldingPropertyData] = useState([]);
 
+
+  console.log(rentalPropertyIds)
+
   useEffect(() => {
+
     const fetchAllpropertyData = async () => {
-      try {
-        const apiEndpoint = getEndpointURL(endpoints.getallinvestedproperty);
-        const url = `${apiEndpoint}?rentalPropertyIds=${rentalPropertyIds.join(',')}&developmentPropertyIds=${developmentPropertyIds.join(',')}&holdingPropertyIds=${holdingPropertyIds.join(',')}`;
-        const response = await fetch(url);
+        try {
+            if (!rentalPropertyIds || !developmentPropertyIds || !holdingPropertyIds) return;
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+            const apiEndpoint = getEndpointURL(endpoints.getallinvestedproperty);
+            const url = `${apiEndpoint}?rentalPropertyIds=${rentalPropertyIds.join(',')}&developmentPropertyIds=${developmentPropertyIds.join(',')}&holdingPropertyIds=${holdingPropertyIds.join(',')}`;
+            console.log(url)
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log(data);
+
+            setPropertyData(data.rentalPropertyData);
+            setDevelopmentPropertyData(data.developmentPropertyData);
+            setHoldingPropertyData(data.holdingPropertyData);
+
+            dispatch(setDashboardData(data.rentalPropertyData, data.developmentPropertyData, data.holdingPropertyData));
+        } catch (error) {
+            // Handle error
         }
-        const data = await response.json();
-        setPropertyData(data.rentalPropertyData);
-        setDevelopmentPropertyData(data.developmentPropertyData)
-        setHoldingPropertyData(data.holdingPropertyData)
-
-        dispatch(setDashboardData(data.rentalPropertyData,data.developmentPropertyData,data.holdingPropertyData));
-      } catch (error) {
-        // Handle error
-      }
     };
-    fetchAllpropertyData();
 
-  }, [setPropertyData, setDevelopmentPropertyData, setHoldingPropertyData,dispatch]);
+    fetchAllpropertyData();
+}, [setPropertyData, setDevelopmentPropertyData, setHoldingPropertyData, dispatch]);
 
 
 
